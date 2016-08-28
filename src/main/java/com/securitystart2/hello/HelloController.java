@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Hello Controller.
  * Created by mesut on 28.8.2016.
  */
 @Controller
