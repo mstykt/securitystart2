@@ -1,5 +1,6 @@
 package com.securitystart2.config;
 
+import com.securitystart2.common.CustomSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,6 +18,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    CustomSuccessHandler customSuccessHandler; //For Role based redirection
+
+    @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser("user").password("userpass").roles("USER");
         auth.inMemoryAuthentication().withUser("admin").password("adminpass").roles("ADMIN");
@@ -29,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/home").permitAll()
                 .antMatchers("/admin").access("hasRole('ADMIN')")
                 .antMatchers("/dba").access("hasRole('ADMIN') and hasRole('DBA')")
-                .and().formLogin().loginPage("/login")
+                .and().formLogin().loginPage("/login").successHandler(customSuccessHandler)
                 .usernameParameter("ssoId").passwordParameter("password")
                 .and().csrf()
                 .and().exceptionHandling().accessDeniedPage("/Access_Denied");
